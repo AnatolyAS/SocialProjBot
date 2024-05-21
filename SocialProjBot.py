@@ -26,7 +26,11 @@ def send_order_menu(call):
         'Помощь местным сообществам': '3',
         'Технологические проекты': '4',
         'Культурные и художественные мероприятия': '5',
-        'Спортивные программы': '6'
+        'Спортивные программы': '6',
+        'Проекты по инклюзии': '7',
+        'Борьба с негативными явлениями': '8',
+        'Доступное жилье для нуждающихся': '9',
+        'Программа профессиональной ориентации': '10'
     }
     for project, code in projects.items():
         key_project = types.InlineKeyboardButton(text=project, callback_data=code)
@@ -34,6 +38,37 @@ def send_order_menu(call):
     key_no = types.InlineKeyboardButton(text='Нет', callback_data='no')
     keyboard.add(key_no)
     bot.send_message(call.message.chat.id, 'Какой проект вам подходит?', reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'histogram')
+def send_order_menu(call):
+    keyboard = types.InlineKeyboardMarkup()
+    diagramms = {
+        'Таблица': '1q',
+        'Гистограмма': '2q',
+        'Круговая диаграмма': '3q',
+        'Точечный крафик': '4q',
+        'Тепловая карта': '5q',
+    }
+    for project, code in diagramms.items():
+        key_project = types.InlineKeyboardButton(text=project, callback_data=code)
+        keyboard.add(key_project)
+    key_no = types.InlineKeyboardButton(text='Нет', callback_data='no')
+    keyboard.add(key_no)
+    bot.send_message(call.message.chat.id, 'Что вы хотите видеть?', reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data in ['1q', '2q', '3q', '4q', '5q'])
+def project_callback(call):
+    project_id = call.data
+    if project_id == '1q':
+        bot.send_photo(call.message.chat.id, open('Resources/Таблица.png', 'rb'))
+    elif project_id == '2q':
+        bot.send_photo(call.message.chat.id, open('Resources/Гистограмма.png', 'rb'))
+    elif project_id == '3q':
+        bot.send_photo(call.message.chat.id, open('Resources/Круг.png', 'rb'))
+    elif project_id == '4q':
+        bot.send_photo(call.message.chat.id, open('Resources/Точечная.png', 'rb'))
+    elif project_id == '5q':
+        bot.send_photo(call.message.chat.id, open('Resources/Теплокарта.png', 'rb'))
 
 @bot.callback_query_handler(func=lambda call: call.data in ['1', '2', '3', '4', '5', '6'])
 def project_callback(call):
